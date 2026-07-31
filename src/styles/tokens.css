@@ -1,0 +1,19 @@
+:root {
+  --color-bg: #03050d;
+  --color-surface: rgb(6 13 27 / 82%);
+  --color-surface-strong: #071224;
+  --color-cyan: #38f4ff;
+  --color-green: #9cff2e;
+  --color-magenta: #ff4dca;
+  --color-text: #effcff;
+  --color-muted: #8db8c8;
+  --color-danger: #ff5278;
+  --color-grid: rgb(31 205 228 / 20%);
+  --font-display: "Arial Narrow", "Roboto Condensed", "Segoe UI", sans-serif;
+  --font-mono: "SFMono-Regular", "Cascadia Mono", "Roboto Mono", monospace;
+  --shadow-cyan: 0 0 24px rgb(56 244 255 / 45%);
+  --shadow-magenta: 0 0 28px rgb(255 77 202 / 48%);
+  --radius-control: 8px;
+  --motion-fast: 160ms;
+  --motion-ring: 18s;
+}
