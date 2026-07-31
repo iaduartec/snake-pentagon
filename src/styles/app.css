@@ -96,10 +96,11 @@ button { font: inherit; }
   display: grid;
   place-items: center;
   position: relative;
+  margin-top: -38px;
 }
 
 .playfield-shell {
-  width: min(73vh, 720px, 72vw);
+  width: min(91vh, 900px, 76vw);
   aspect-ratio: 1;
   position: relative;
   touch-action: none;
@@ -116,6 +117,7 @@ button { font: inherit; }
   justify-items: center;
   gap: 18px;
   pointer-events: none;
+  transform: translateY(84px);
 }
 
 .game-overlay p {
@@ -154,7 +156,13 @@ button { font: inherit; }
   .hud__divider { height: 30px; }
   .topbar__actions { grid-column: 1 / -1; position: absolute; right: 14px; top: 68px; }
   .chrome-button { min-height: 40px; padding: 0 12px; font-size: .68rem; }
-  .playfield-shell { width: min(100vw - 12px, 62svh); margin-top: 30px; }
+  .playfield-shell { width: min(100%, 62svh); margin-top: 30px; }
+  .game-region {
+    margin-top: 0;
+    grid-template-rows: auto auto;
+    place-content: start center;
+  }
+  .game-overlay { transform: translateY(50px); }
   .instruction { display: none; }
   .touch-controls {
     display: grid;
@@ -162,7 +170,7 @@ button { font: inherit; }
     grid-template-rows: repeat(2, 48px);
     justify-content: center;
     gap: 7px;
-    margin-top: -8px;
+    margin-top: -14px;
   }
   .touch-control {
     display: grid;

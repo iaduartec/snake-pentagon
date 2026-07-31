@@ -14,8 +14,8 @@ const pentagon = createPentagon({ x: 300, y: 300 }, 205);
 
 export default function App() {
   const validCells = useMemo(() => getPlayableCells(21, pentagon, 2), []);
-  const game = useSnakeGame(validCells);
-  const best = useHighScore(game.state.score);
+  const { state, start, restart, togglePause, changeDirection } = useSnakeGame(validCells);
+  const best = useHighScore(state.score);
   const pointerStart = useRef<Point | null>(null);
 
   useEffect(() => {
@@ -23,27 +23,27 @@ export default function App() {
       const direction = directionForKey(event.key);
       if (direction) {
         event.preventDefault();
-        game.changeDirection(direction);
+        changeDirection(direction);
         return;
       }
       if (event.code === "Space") {
         event.preventDefault();
-        game.togglePause();
+        togglePause();
       }
       if (event.key === "Enter") {
-        if (game.state.status === "ready" || game.state.status === "paused") game.start();
-        if (game.state.status === "over" || game.state.status === "won") game.restart();
+        if (state.status === "ready" || state.status === "paused") start();
+        if (state.status === "over" || state.status === "won") restart();
       }
     };
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [game]);
+  }, [changeDirection, restart, start, state.status, togglePause]);
 
   const finishSwipe = (point: Point) => {
     if (!pointerStart.current) return;
     const direction = directionForSwipe(pointerStart.current, point);
-    if (direction) game.changeDirection(direction);
+    if (direction) changeDirection(direction);
     pointerStart.current = null;
   };
 
@@ -51,10 +51,10 @@ export default function App() {
     <main className="app-shell">
       <header className="topbar">
         <h1 className="brand">NEON <span>SNAKE</span></h1>
-        <Hud score={game.state.score} best={best} />
+        <Hud score={state.score} best={best} />
         <div className="topbar__actions">
-          <button className="chrome-button" type="button" onClick={game.togglePause} aria-pressed={game.state.status === "paused"}>Ⅱ PAUSE</button>
-          <button className="chrome-button" type="button" onClick={game.restart}>↻ RESTART</button>
+          <button className="chrome-button" type="button" onClick={togglePause} aria-pressed={state.status === "paused"}>Ⅱ PAUSE</button>
+          <button className="chrome-button" type="button" onClick={restart}>↻ RESTART</button>
         </div>
       </header>
       <section className="game-region" aria-label="Game">
@@ -63,10 +63,10 @@ export default function App() {
           onPointerDown={(event) => { pointerStart.current = { x: event.clientX, y: event.clientY }; }}
           onPointerUp={(event) => finishSwipe({ x: event.clientX, y: event.clientY })}
         >
-          <GameCanvas state={game.state} pentagon={pentagon} />
-          <GameOverlay status={game.state.status} score={game.state.score} onStart={game.start} onRestart={game.restart} />
+          <GameCanvas state={state} pentagon={pentagon} />
+          <GameOverlay status={state.status} score={state.score} onStart={start} onRestart={restart} />
         </div>
-        <GameControls onDirection={game.changeDirection} />
+        <GameControls onDirection={changeDirection} />
       </section>
       <p className="instruction">ARROWS / WASD TO MOVE · SPACE TO PAUSE</p>
     </main>
