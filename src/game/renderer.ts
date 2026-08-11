@@ -17,17 +17,6 @@ function tracePolygon(ctx: CanvasRenderingContext2D, vertices: Point[]) {
   ctx.closePath();
 }
 
-function rotatedVertices(pentagon: Pentagon, angle: number, scale: number): Point[] {
-  return pentagon.vertices.map((vertex) => {
-    const x = (vertex.x - pentagon.center.x) * scale;
-    const y = (vertex.y - pentagon.center.y) * scale;
-    return {
-      x: pentagon.center.x + x * Math.cos(angle) - y * Math.sin(angle),
-      y: pentagon.center.y + x * Math.sin(angle) + y * Math.cos(angle),
-    };
-  });
-}
-
 function cellBox(pentagon: Pentagon, col: number, row: number) {
   const size = (pentagon.radius * 2) / GRID_SIZE;
   return {
@@ -63,17 +52,23 @@ export function renderGame(
   const { width, height, timeMs, reducedMotion } = options;
   ctx.clearRect(0, 0, width, height);
 
-  const rotation = reducedMotion ? -0.025 : timeMs / 18_000;
+  const rotation = reducedMotion ? 0 : timeMs / 14_000;
+
+  ctx.save();
+  ctx.translate(pentagon.center.x, pentagon.center.y);
+  ctx.rotate(rotation);
+  ctx.translate(-pentagon.center.x, -pentagon.center.y);
+
   ctx.save();
   ctx.shadowBlur = 22;
   ctx.shadowColor = "#ff4dca";
   ctx.strokeStyle = "#ff65d4";
   ctx.lineWidth = 2.4;
-  tracePolygon(ctx, rotatedVertices(pentagon, rotation, 1.18));
+  tracePolygon(ctx, pentagon.vertices);
   ctx.stroke();
   ctx.globalAlpha = 0.52;
   ctx.lineWidth = 1;
-  tracePolygon(ctx, rotatedVertices(pentagon, rotation + 0.018, 1.22));
+  tracePolygon(ctx, pentagon.vertices);
   ctx.stroke();
   ctx.restore();
 
@@ -178,5 +173,7 @@ export function renderGame(
   ctx.lineWidth = 2;
   tracePolygon(ctx, pentagon.vertices);
   ctx.stroke();
+  ctx.restore();
+
   ctx.restore();
 }
